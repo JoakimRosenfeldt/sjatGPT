@@ -116,7 +116,7 @@
 		loading = true;
 		drink = undefined;
 		const data = {
-			model: 'gemma3:1b',
+			model: 'gemma3',
 			prompt: buildPrompt(),
 			stream: false,
 			format: {
