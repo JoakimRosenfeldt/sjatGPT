@@ -14,6 +14,7 @@ async function complete(model: string, prompt: string, response_format?: object)
 	});
 	const data = await result.json();
 	console.log('OpenRouter response:', JSON.stringify(data, null, 2));
+	if (!data.choices) throw new Error(`OpenRouter ${model}: ${data.error?.message}`);
 	return data.choices[0].message.content as string;
 }
 
