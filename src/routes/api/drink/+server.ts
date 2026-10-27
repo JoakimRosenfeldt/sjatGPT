@@ -46,7 +46,7 @@ export async function POST({ request }) {
 			}
 		}),
 		openrouter('v1/chat/completions', {
-			model: 'meta/muse-spark-1.3',
+			model: 'mistralai/mistral-nemo',
 			messages: [
 				{
 					role: 'user',
