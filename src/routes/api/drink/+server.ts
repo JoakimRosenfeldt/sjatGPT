@@ -41,12 +41,18 @@ export async function POST({ request }) {
 			model: '~typesafe/jev-latest',
 			state: { alcoholics, others },
 			questions: {
-				alcoholics: choice('Which spirit is the best base for a tasty mixed drink?', alcoholics),
-				others: choice('Which mixer goes best in a tasty mixed drink?', others)
+				alcoholics: choice(
+					'Pick a spirit for a surprising mixed drink. Every option is fine, so be adventurous and do not just pick the classic choice.',
+					alcoholics
+				),
+				others: choice(
+					'Pick a mixer for a surprising mixed drink. Every option is fine, so be adventurous and do not just pick the classic choice.',
+					others
+				)
 			}
 		}),
 		openrouter('v1/chat/completions', {
-			model: 'mistralai/mistral-nemo',
+			model: 'anthropic/claude-haiku-5.5',
 			messages: [
 				{
 					role: 'user',
