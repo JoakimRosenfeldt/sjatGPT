@@ -142,9 +142,7 @@
 		prompt = prompt.concat(
 			`And here is the list of other types of drinks: ${JSON.stringify(shuffleArray(others))}. `
 		);
-		prompt = prompt.concat(
-			'Also provide an unhinged brainrot name for the drink, that does not include any ingredients in the name. Respond using JSON.'
-		);
+		prompt = prompt.concat('Respond using JSON.');
 		return prompt;
 	}
 
