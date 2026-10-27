@@ -21,7 +21,7 @@ export async function POST({ request }) {
 	const { prompt } = await request.json();
 
 	const [ingredients, name] = await Promise.all([
-		complete('typesafe/jev-router', prompt, {
+		complete('~typesafe/jev-latest', prompt, {
 			type: 'json_schema',
 			json_schema: {
 				name: 'drink',
@@ -38,7 +38,7 @@ export async function POST({ request }) {
 			}
 		}),
 		complete(
-			'mistralai/mistral-nemo',
+			'meta/muse-spark-1.3',
 			'Come up with an unhinged brainrot name for a mixed drink. Do not mention any ingredients. Reply with only the name.'
 		)
 	]);
