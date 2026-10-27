@@ -141,11 +141,11 @@
 			<!-- 	<Card.Title>SjatGPT</Card.Title> -->
 			<!-- 	{#if serialConnected} -->
 			<!-- 		<Card.Description -->
-			<!-- 			>Angiv lager forneden, tryk på knappen og lad magien ske</Card.Description -->
+			<!-- 			>Add your stock below, press the button and let the magic happen</Card.Description -->
 			<!-- 		> -->
 			<!-- 	{:else} -->
 			<!-- 		<Card.Description -->
-			<!-- 			>Tilslut en arduino og vælg den ved at trykke på knappen herunder.</Card.Description -->
+			<!-- 			>Connect an Arduino and select it by pressing the button below.</Card.Description -->
 			<!-- 		> -->
 			<!-- 	{/if} -->
 			<!-- </Card.Header> -->
@@ -159,20 +159,20 @@
 					>
 				{:else if drink}
 					<Card.Title>{drink.name}</Card.Title>
-					<Card.Title class="mt-6">Alkohol</Card.Title>
+					<Card.Title class="mt-6">Alcohol</Card.Title>
 					<ul class="list-disc">
 						{#each drink.alcoholics as alcohol}
 							<li class="mx-6 mt-2 border-collapse">{alcohol}</li>
 						{/each}
 					</ul>
-					<Card.Title class="mt-6">Opblanding</Card.Title>
+					<Card.Title class="mt-6">Mixer</Card.Title>
 					<ul class="list-disc">
 						{#each drink.others as other}
 							<li class="mx-6 mt-2">{other}</li>
 						{/each}
 					</ul>
 					<!-- {:else} -->
-					<!-- 	<p>Tryk på knappen herunder og lad magien ske...</p> -->
+					<!-- 	<p>Press the button below and let the magic happen...</p> -->
 				{/if}
 			</Card.Content>
 			{#if serialConnected}
@@ -182,7 +182,7 @@
 						disabled={loading}
 						onclick={() => {
 							requestDrink();
-						}}>Bestil drink</Button
+						}}>Order drink</Button
 					>
 				</Card.Footer>
 			{/if}
@@ -192,15 +192,15 @@
 		<div class="row-span-4 justify-items-center p-16">
 			<Card.Root class="w-full">
 				<Card.Header>
-					<Card.Title>Alkohol</Card.Title>
-					<Card.Description>Angiv hvilke slags alkohol, der er på lager</Card.Description>
+					<Card.Title>Alcohol</Card.Title>
+					<Card.Description>Enter which kinds of alcohol are in stock</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<Button
 						class="w-full"
 						onclick={() => {
 							alcoholDialogOpen = true;
-						}}>Tilføj Alkohol</Button
+						}}>Add Alcohol</Button
 					>
 					<Separator class="my-4" />
 					{#if alcoholics.length > 0}
@@ -215,7 +215,7 @@
 							</Card.Root>
 						{/each}
 					{:else}
-						<p>Tilføj noget alkohol for at begynde...</p>
+						<p>Add some alcohol to get started...</p>
 					{/if}
 				</Card.Content>
 			</Card.Root>
@@ -223,15 +223,15 @@
 		<div class="row-span-4 justify-items-center p-16">
 			<Card.Root class="w-full">
 				<Card.Header>
-					<Card.Title>Opblanding</Card.Title>
-					<Card.Description>Angiv hvilke slags opblandinger, der er på lager</Card.Description>
+					<Card.Title>Mixer</Card.Title>
+					<Card.Description>Enter which kinds of mixers are in stock</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<Button
 						class="w-full"
 						onclick={() => {
 							otherDialogOpen = true;
-						}}>Tilføj Opblanding</Button
+						}}>Add Mixer</Button
 					>
 					<Separator class="my-4" />
 					{#if others.length > 0}
@@ -246,7 +246,7 @@
 							</Card.Root>
 						{/each}
 					{:else}
-						<p>Tilføj en opblanding for at begynde...</p>
+						<p>Add a mixer to get started...</p>
 					{/if}
 				</Card.Content>
 			</Card.Root>
@@ -257,14 +257,14 @@
 <Dialog.Root bind:open={alcoholDialogOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Tilføj alkohol</Dialog.Title>
-			<Dialog.Description>Skriv navnet på det alkohol du vil tilføje</Dialog.Description>
+			<Dialog.Title>Add alcohol</Dialog.Title>
+			<Dialog.Description>Enter the name of the alcohol you want to add</Dialog.Description>
 			<div class="grid gap-4 py-4">
 				<div class="grid grid-cols-4 items-center gap-4">
-					<Label for="alcohol" class="text-right">Alkohol</Label>
+					<Label for="alcohol" class="text-right">Alcohol</Label>
 					<Input
 						id="alcohol"
-						placeholder="Noget lækkert"
+						placeholder="Something tasty"
 						class="col-span-3"
 						bind:value={alcoholInput}
 						onkeypress={(event: any) => {
@@ -277,7 +277,7 @@
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button onclick={addAlcohol}>Tilføj</Button>
+				<Button onclick={addAlcohol}>Add</Button>
 			</Dialog.Footer>
 		</Dialog.Header>
 	</Dialog.Content>
@@ -286,14 +286,14 @@
 <Dialog.Root bind:open={otherDialogOpen}>
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>Tilføj opblanding</Dialog.Title>
-			<Dialog.Description>Skriv navnet på den opblanding du vil tilføje</Dialog.Description>
+			<Dialog.Title>Add mixer</Dialog.Title>
+			<Dialog.Description>Enter the name of the mixer you want to add</Dialog.Description>
 			<div class="grid gap-4 py-4">
 				<div class="grid grid-cols-4 items-center gap-4">
-					<Label for="other" class="text-right">Opblanding</Label>
+					<Label for="other" class="text-right">Mixer</Label>
 					<Input
 						id="other"
-						placeholder="Noget lækkert"
+						placeholder="Something tasty"
 						class="col-span-3"
 						bind:value={otherInput}
 						onkeypress={(event: any) => {
@@ -306,7 +306,7 @@
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button onclick={addOther}>Tilføj</Button>
+				<Button onclick={addOther}>Add</Button>
 			</Dialog.Footer>
 		</Dialog.Header>
 	</Dialog.Content>
