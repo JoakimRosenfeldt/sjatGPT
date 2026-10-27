@@ -117,7 +117,7 @@
 		drink = undefined;
 		const result = await fetch('/api/drink', {
 			method: 'POST',
-			body: JSON.stringify({ prompt: buildPrompt() })
+			body: JSON.stringify({ alcoholics, others })
 		});
 
 		drink = await result.json();
@@ -131,28 +131,6 @@
 			drink.others = drink.others.slice(0, othersAmount);
 		}
 		loading = false;
-	}
-
-	function buildPrompt(): string {
-		let prompt: string =
-			'From the two lists I will provide, one with some alcoholics/spirits and one with other types of drinks, You have to say which ones to put in a drink. You can choose a MINIMUM of 1 alcoholic/spirit, and a MAXIMUM of 2. Of the other types of drinks, you can choose a MINIMUM of 1 and a MAXIMUM of 3. It is very important that you follow the minimum and maximum. ';
-		prompt = prompt.concat(
-			`Here is the list of alcoholics/spirits: ${JSON.stringify(shuffleArray(alcoholics))}. `
-		);
-		prompt = prompt.concat(
-			`And here is the list of other types of drinks: ${JSON.stringify(shuffleArray(others))}. `
-		);
-		prompt = prompt.concat('Respond using JSON.');
-		return prompt;
-	}
-
-	function shuffleArray(input: string[]): string[] {
-		let array: string[] = input.slice();
-		for (let i = array.length - 1; i >= 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[array[i], array[j]] = [array[j], array[i]];
-		}
-		return array;
 	}
 </script>
 

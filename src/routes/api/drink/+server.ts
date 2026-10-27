@@ -1,10 +1,9 @@
 import { OPENROUTER_API_KEY } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 
-async function complete(model: string, prompt: string, response_format?: object) {
-	const body = { model, messages: [{ role: 'user', content: prompt }], response_format };
+async function openrouter(path: string, body: object) {
 	console.log('OpenRouter request:', JSON.stringify(body, null, 2));
-	const result = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+	const result = await fetch(`https://openrouter.ai/api/${path}`, {
 		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${OPENROUTER_API_KEY}`,
@@ -14,35 +13,53 @@ async function complete(model: string, prompt: string, response_format?: object)
 	});
 	const data = await result.json();
 	console.log('OpenRouter response:', JSON.stringify(data, null, 2));
-	if (!data.choices) throw new Error(`OpenRouter ${model}: ${data.error?.message}`);
-	return data.choices[0].message.content as string;
+	if (data.error) throw new Error(`OpenRouter ${path}: ${data.error.message}`);
+	return data;
+}
+
+function choice(instructions: string, options: string[]) {
+	return {
+		type: 'choice',
+		instructions,
+		criteria: Object.fromEntries(options.map((option) => [option, option]))
+	};
+}
+
+// Random order weighted by Jev's probabilities, so the likeliest ingredients usually come first.
+function weightedShuffle(probabilities: Record<string, number>) {
+	return Object.entries(probabilities)
+		.map(([option, p]) => ({ option, key: Math.random() ** (1 / p) }))
+		.sort((a, b) => b.key - a.key)
+		.map((it) => it.option);
 }
 
 export async function POST({ request }) {
-	const { prompt } = await request.json();
+	const { alcoholics, others } = await request.json();
 
-	const [ingredients, name] = await Promise.all([
-		complete('~typesafe/jev-latest', prompt, {
-			type: 'json_schema',
-			json_schema: {
-				name: 'drink',
-				strict: true,
-				schema: {
-					type: 'object',
-					properties: {
-						alcoholics: { type: 'array', items: { type: 'string' } },
-						others: { type: 'array', items: { type: 'string' } }
-					},
-					required: ['alcoholics', 'others'],
-					additionalProperties: false
-				}
+	const [decision, completion] = await Promise.all([
+		openrouter('alpha/decisions', {
+			model: '~typesafe/jev-latest',
+			state: { alcoholics, others },
+			questions: {
+				alcoholics: choice('Which spirit is the best base for a tasty mixed drink?', alcoholics),
+				others: choice('Which mixer goes best in a tasty mixed drink?', others)
 			}
 		}),
-		complete(
-			'meta/muse-spark-1.3',
-			'Come up with an unhinged brainrot name for a mixed drink. Do not mention any ingredients. Reply with only the name.'
-		)
+		openrouter('v1/chat/completions', {
+			model: 'meta/muse-spark-1.3',
+			messages: [
+				{
+					role: 'user',
+					content:
+						'Come up with an unhinged brainrot name for a mixed drink. Do not mention any ingredients. Reply with only the name.'
+				}
+			]
+		})
 	]);
 
-	return json({ ...JSON.parse(ingredients), name: name.trim().replace(/^"|"$/g, '') });
+	return json({
+		name: completion.choices[0].message.content.trim().replace(/^"|"$/g, ''),
+		alcoholics: weightedShuffle(decision.answers.alcoholics.probabilities),
+		others: weightedShuffle(decision.answers.others.probabilities)
+	});
 }
