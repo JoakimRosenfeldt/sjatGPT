@@ -115,36 +115,12 @@
 
 		loading = true;
 		drink = undefined;
-		const data = {
-			model: 'gemma3',
-			prompt: buildPrompt(),
-			stream: false,
-			format: {
-				type: 'object',
-				properties: {
-					name: {
-						type: 'string'
-					},
-					alcoholics: {
-						type: 'array'
-					},
-					others: {
-						type: 'array'
-					}
-				},
-				required: ['name', 'alcoholics', 'others']
-			}
-		};
-
-		const result = await fetch('http://localhost:11434/api/generate', {
+		const result = await fetch('/api/drink', {
 			method: 'POST',
-			body: JSON.stringify(data)
+			body: JSON.stringify({ prompt: buildPrompt() })
 		});
 
-		const json = await result.json();
-		console.log(json.response);
-
-		drink = JSON.parse(json.response);
+		drink = await result.json();
 
 		const alcoholAmount = Math.random() * (3 - 1) + 1;
 		if (drink && drink?.alcoholics.length > alcoholAmount) {
